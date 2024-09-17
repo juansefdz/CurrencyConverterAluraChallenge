@@ -4,12 +4,12 @@ public class Currency {
 
     private String currency;
     private String currencyName;
-    private double value;
+    private double amount;
 
-    public Currency(String currency, String currencyName, double value) {
+    public Currency(String currency, String currencyName, double amount) {
         this.currency = currency;
         this.currencyName = currencyName;
-        this.value = value;
+        this.amount = amount;
     }
 
     public String getCurrency() {
@@ -20,12 +20,12 @@ public class Currency {
         return currencyName;
     }
 
-    public double getValue() {
-        return value;
+    public double getAmount() {
+        return amount;
     }
-    
+
     @Override
     public String toString() {
-        return "Moneda: " + currencyName + " (" + currency + "), Valor: " + value;
+        return "Moneda: " + currencyName + " (" + currency + "), Cantidad: " + amount;
     }
 }

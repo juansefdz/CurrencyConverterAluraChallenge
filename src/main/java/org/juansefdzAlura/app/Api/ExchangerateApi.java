@@ -11,13 +11,12 @@ import org.juansefdzAlura.app.entity.Currency;
 import org.juansefdzAlura.app.enums.CurrencyValues;
 
 public class ExchangerateApi {
-    public Currency exchangeCurrency(CurrencyValues currency) {
-
+    public Currency exchangeCurrency(CurrencyValues fromCurrency, CurrencyValues toCurrency, double amount) {
         Dotenv dotenv = Dotenv.load();
         String apiKey = dotenv.get("APIKEY");
 
         try {
-            URI uri = new URI("https://v6.exchangerate-api.com/v6/" + apiKey + "/latest/" + currency.getCode());
+            URI uri = new URI("https://v6.exchangerate-api.com/v6/" + apiKey + "/latest/" + fromCurrency.getCode());
 
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
@@ -29,11 +28,14 @@ public class ExchangerateApi {
 
             JsonObject jsonResponse = new Gson().fromJson(response.body(), JsonObject.class);
 
-            System.out.println("Respuesta de la API: " + jsonResponse);
+            
 
-            double exchangeRate = jsonResponse.getAsJsonObject("conversion_rates").get("USD").getAsDouble();
+            double exchangeRate = jsonResponse.getAsJsonObject("conversion_rates").get(toCurrency.getCode())
+                    .getAsDouble();
 
-            return new Currency(currency.getCode(), currency.getName(), exchangeRate);
+            double convertedAmount = amount * exchangeRate;
+
+            return new Currency(toCurrency.getCode(), toCurrency.getName(), convertedAmount);
 
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener la tasa de cambio: " + e.getMessage());
